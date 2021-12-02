@@ -1,8 +1,4 @@
-// 注意: 本项目的所有源文件都必须是 UTF-8 编码
-
-// 这是一个“反撤回”机器人
-// 在群里回复 “/anti-recall enabled.” 或者 “撤回没用” 之后
-// 如果有人在群里撤回，那么机器人会把撤回的内容再发出来
+//快速程序
 
 #include <iostream>
 #include <map>
@@ -19,13 +15,7 @@ int main()
 #endif
 
 	MiraiBot bot;
-	SessionOptions opts;
-	opts.BotQQ = 123456789_qq;				// 请修改为你的机器人QQ
-	opts.HttpHostname = "localhost";		// 请修改为和 mirai-api-http 配置文件一致
-	opts.WebSocketHostname = "localhost";	// 同上
-	opts.HttpPort = 8080;					// 同上
-	opts.WebSocketPort = 8080;				// 同上
-	opts.VerifyKey = "VerifyKey";			// 同上
+	SessionOptions opts = SessionOptions().FromJsonFile("config.json");
 
 	while (true)
 	{
@@ -46,22 +36,16 @@ int main()
 	// 用map记录哪些群启用了“反撤回”功能
 	map<GID_t, bool> groups;
 
-	bot.On<GroupMessage>(
+	/*bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
 			try
 			{
 				string plain = m.MessageChain.GetPlainText();
-				if (plain == "/anti-recall enabled." || plain == "撤回没用")
+				if (plain.find("加群"))
 				{
-					groups[m.Sender.Group.GID] = true;
-					m.Reply(MessageChain().Plain("撤回也没用，我都看到了"));
-					return;
-				}
-				if (plain == "/anti-recall disabled." || plain == "撤回有用")
-				{
-					groups[m.Sender.Group.GID] = false;
-					m.Reply(MessageChain().Plain("撤回有用"));
+                    m.Reply(MessageChain().Plain("诈骗信息，请勿相信")); // 发送提醒消息
+                    m.Recall(); // 撤回消息
 					return;
 				}
 			}
@@ -69,24 +53,16 @@ int main()
 			{
 				cout << ex.what() << endl;
 			}
-		});
+		});*/
 
-
-	bot.On<GroupRecallEvent>(
-		[&](GroupRecallEvent e)
-		{
-			try
-			{
-				if (!groups[e.Group.GID]) return;
-				auto recalled_mc = bot.GetGroupMessageFromId(e.MessageId).MessageChain;
-				auto mc = "刚刚有人撤回了: " + recalled_mc;
-				bot.SendMessage(e.Group.GID, mc);
-			}
-			catch (const std::exception& ex)
-			{
-				cout << ex.what() << endl;
-			}
-		});
+    bot.On<MemberJoinEvent>(
+            [&](MemberJoinEvent mj)
+            {
+               GID_t groupID = mj.NewMember.Group.GID;
+               bot.SendMessage(groupID,
+                               MessageChain().Plain("这是报名表：https://www.wjx.top/vm/P70jDA9.aspx"));
+               return;
+            });
 
 	// 在失去与mah的连接后重连
 	bot.On<LostConnection>([&](LostConnection e)
