@@ -1,12 +1,86 @@
 //快速程序
 
 #include <iostream>
+#include <string>
+#include <random>
+#include <time.h>
 #include <map>
 #include <mirai.h>
 #include <fstream>
 #include "myheader.h"
+
 using namespace std;
 using namespace Cyan;
+
+string flagChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+int numRand(int first, int end)
+{
+    mt19937 rand(clock()); //定义随机数生成器
+    uniform_int_distribution<int> dist(first, end);
+    return dist(rand);
+}
+
+string rand_flag()
+{
+    int flagCut = numRand(0,2);
+    int flagLength,partlength,flagCraPos;
+    string flagHead = "Flag{";
+    string flag;
+    string flagEnd = "}";
+    switch (flagCut)
+    {
+        case 0:
+            flagLength = numRand(7,15);
+            for (int c0 = 0; c0 < flagLength + 1; c0++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            break;
+        case 1:
+            flagLength = numRand(10,18);
+            partlength = numRand(3,7);
+            for (int c11 = 0; c11 < partlength + 1; c11++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            flag += "_";
+            for (int c12 = 0; c12 < (flagLength - partlength); c12++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            break;
+        case 2:
+            partlength = numRand(3,5);
+            for (int c21 = 0; c21 < partlength + 1; c21++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            partlength = numRand(4,6);
+            flag += "_";
+            for (int c22 = 0; c22 < partlength + 1; c22++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            partlength = numRand(3,7);
+            flag += "_";
+            for (int c23 = 0; c23 < partlength + 1; c23++) {
+                flagCraPos = numRand(0,61);
+                flag += flagChar[flagCraPos];
+                _sleep(10);
+            }
+            break;
+        default:
+            break;
+    }
+
+    return flagHead + flag + flagEnd;
+}
 
 int main()
 {
@@ -52,6 +126,13 @@ int main()
                 if (plain == "cat fllllllllag")
                 {
                     m.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
+                    return;
+                }
+
+                if (plain == "flag")
+                {
+                    string fakeflag = rand_flag();
+                    m.Reply(MessageChain().Plain(fakeflag));
                     return;
                 }
 			}
