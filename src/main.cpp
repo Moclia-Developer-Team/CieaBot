@@ -49,7 +49,7 @@ int main()
 					return;
 				}
 
-                if (plain == "flag")
+                if (plain == "cat fllllllllag")
                 {
                     m.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
                     return;
