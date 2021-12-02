@@ -36,16 +36,15 @@ int main()
 	// 用map记录哪些群启用了“反撤回”功能
 	map<GID_t, bool> groups;
 
-	/*bot.On<GroupMessage>(
+	bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
 			try
 			{
 				string plain = m.MessageChain.GetPlainText();
-				if (plain.find("加群"))
+				if (plain == "报名表")
 				{
-                    m.Reply(MessageChain().Plain("诈骗信息，请勿相信")); // 发送提醒消息
-                    m.Recall(); // 撤回消息
+                    m.Reply(MessageChain().Plain("这是报名表：https://www.wjx.top/vm/P70jDA9.aspx"));
 					return;
 				}
 			}
@@ -53,7 +52,7 @@ int main()
 			{
 				cout << ex.what() << endl;
 			}
-		});*/
+		});
 
     bot.On<MemberJoinEvent>(
             [&](MemberJoinEvent mj)
