@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <mirai.h>
+#include <fstream>
 #include "myheader.h"
 using namespace std;
 using namespace Cyan;
@@ -47,6 +48,12 @@ int main()
                     m.Reply(MessageChain().Plain("这是报名表：https://www.wjx.top/vm/P70jDA9.aspx"));
 					return;
 				}
+
+                if (plain == "flag")
+                {
+                    m.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
+                    return;
+                }
 			}
 			catch (const std::exception& ex)
 			{
