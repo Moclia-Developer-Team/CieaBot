@@ -14,6 +14,12 @@ using namespace Cyan;
 
 string flagChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+void Delay(int time)//time*1000为秒数
+{
+    clock_t now = clock();
+    while(clock() - now < time);
+}
+
 int numRand(int first, int end)
 {
     mt19937 rand(clock()); //定义随机数生成器
@@ -35,7 +41,7 @@ string rand_flag()
             for (int c0 = 0; c0 < flagLength + 1; c0++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             break;
         case 1:
@@ -44,13 +50,13 @@ string rand_flag()
             for (int c11 = 0; c11 < partlength + 1; c11++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             flag += "_";
             for (int c12 = 0; c12 < (flagLength - partlength); c12++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             break;
         case 2:
@@ -58,21 +64,21 @@ string rand_flag()
             for (int c21 = 0; c21 < partlength + 1; c21++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             partlength = numRand(4,6);
             flag += "_";
             for (int c22 = 0; c22 < partlength + 1; c22++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             partlength = numRand(3,7);
             flag += "_";
             for (int c23 = 0; c23 < partlength + 1; c23++) {
                 flagCraPos = numRand(0,61);
                 flag += flagChar[flagCraPos];
-                _sleep(10);
+                Delay(10);
             }
             break;
         default:
