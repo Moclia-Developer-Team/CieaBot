@@ -10,6 +10,9 @@ set(MIRAI_CPP_BUILD_EXAMPLES OFF CACHE BOOL "Build examples" FORCE)
 # 添加子模块 mirai-cpp
 add_subdirectory(mirai-cpp)
 
+find_package(nlohmann_json)
+find_package(SQLiteCpp)
+
 # 源码以 UTF-8 编码保存，使用 MSVC 编译器时需要加编译参数提供支持
 if(MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -17,15 +20,18 @@ if(MSVC)
     message(STATUS "optional: /UTF-8")   
 endif(MSVC)
 
-# 要添加.cpp源文件，请修改这一行
-# 例如：add_executable(${PROJECT_NAME} src/main.cpp src/a.cpp src/b.cpp)
-add_executable(${PROJECT_NAME} src/main.cpp)
+# 递归搜索 src 目录中的源文件
+file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # 设置头文件目录
 include_directories(include)
 # 链接 mirai-cpp
 target_link_libraries(${PROJECT_NAME} PRIVATE mirai-cpp)
 # 使用 mirai-cpp 静态库
 target_compile_definitions(${PROJECT_NAME} PRIVATE MIRAICPP_STATICLIB)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE SQLiteCpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # 链接 pthread

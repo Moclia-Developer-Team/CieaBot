@@ -1,18 +1,14 @@
-//快速程序
+/*於陵汐娅机器人项目C++程序*/
 
-#include <iostream>
-#include <string>
-#include <random>
-#include <time.h>
-#include <map>
-#include <mirai.h>
-#include <fstream>
-#include "myheader.h"
+/*自定义头文件*/
+#include "Global.h" // 自定义头文件
+#include "CustomCommand.h"
 
 using namespace std;
 using namespace Cyan;
 
 string flagChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+bool groupBan = false;
 
 void Delay(int time)//time*1000为秒数
 {
@@ -113,9 +109,7 @@ int main()
 		MiraiBot::SleepSeconds(1);
 	}
 	cout << "Bot Working..." << endl;
-
-	// 用map记录哪些群启用了“反撤回”功能
-	map<GID_t, bool> groups;
+    ciea::initCommand();
 
 	bot.On<GroupMessage>(
 		[&](GroupMessage m)
@@ -123,23 +117,40 @@ int main()
 			try
 			{
 				string plain = m.MessageChain.GetPlainText();
-				if (plain == "报名表")
-				{
-                    m.Reply(MessageChain().Plain("这是报名表：https://www.wjx.top/vm/P70jDA9.aspx"));
-					return;
-				}
 
-                if (plain == "cat fllllllllag")
+                if (plain == "cat fllllllllag" && !groupBan)
                 {
                     m.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
                     return;
                 }
 
-                if (plain == "flag")
+                if (plain == "flag" && !groupBan)
                 {
                     string fakeflag = rand_flag();
                     m.Reply(MessageChain().Plain(fakeflag));
                     return;
+                }
+
+                if (plain.find("addkw ") == 0)
+                {
+                    string delAddKW, delStr, msg;
+                    delAddKW = plain.substr(strlen("addkw "));
+                    delStr = delAddKW.substr(0, delAddKW.find(" "));
+                    msg = ciea::addCommand(
+                            delStr,m.MessageChain);
+                    m.Reply(MessageChain().Plain(msg));
+                }
+
+                if (plain.find("delkw ") == 0)
+                {
+                    string msg = ciea::deleteCommand(plain.substr(strlen("delkw ")));
+                    m.Reply(MessageChain().Plain(msg));
+                }
+
+                MessageChain rmc = ciea::showCommand(plain);
+                if (!rmc.Empty())
+                {
+                    m.Reply(rmc);
                 }
 			}
 			catch (const std::exception& ex)
@@ -148,14 +159,91 @@ int main()
 			}
 		});
 
-    bot.On<MemberJoinEvent>(
+    bot.On<FriendMessage>(
+            [&](FriendMessage fm)
+            {
+                try {
+                    string plain = fm.MessageChain.GetPlainText();
+                    if (plain == "cat fllllllllag")
+                    {
+                        fm.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
+                        return;
+                    }
+
+                    if (plain == "flag")
+                    {
+                        string fakeflag = rand_flag();
+                        fm.Reply(MessageChain().Plain(fakeflag));
+                        return;
+                    }
+
+                    if (plain == "GroupBan")
+                    {
+                        groupBan = true;
+                        fm.Reply(MessageChain().Plain("GroupBan = True"));
+                        return;
+                    }
+
+                    if (plain == "!GroupBan")
+                    {
+                        groupBan = false;
+                        fm.Reply(MessageChain().Plain("GroupBan = False"));
+                        return;
+                    }
+                }
+                catch (const std::exception& ex)
+                {
+                    cout << ex.what() << endl;
+                }
+            });
+
+    bot.On<TempMessage>(
+            [&](TempMessage tm)
+            {
+                try {
+                    string plain = tm.MessageChain.GetPlainText();
+                    if (plain == "cat fllllllllag")
+                    {
+                        tm.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
+                        return;
+                    }
+
+                    if (plain == "flag")
+                    {
+                        string fakeflag = rand_flag();
+                        tm.Reply(MessageChain().Plain(fakeflag));
+                        return;
+                    }
+
+                    if (plain == "GroupBan")
+                    {
+                        groupBan = true;
+                        tm.Reply(MessageChain().Plain("GroupBan = True"));
+                        return;
+                    }
+
+                    if (plain == "!GroupBan")
+                    {
+                        groupBan = false;
+                        tm.Reply(MessageChain().Plain("GroupBan = False"));
+                        return;
+                    }
+                }
+                catch (const std::exception& ex)
+                {
+                    cout << ex.what() << endl;
+                }
+            });
+
+    /*bot.On<MemberJoinEvent>(
             [&](MemberJoinEvent mj)
             {
                GID_t groupID = mj.NewMember.Group.GID;
                bot.SendMessage(groupID,
                                MessageChain().Plain("这是报名表：https://www.wjx.top/vm/P70jDA9.aspx"));
                return;
-            });
+            });*/
+
 
 	// 在失去与mah的连接后重连
 	bot.On<LostConnection>([&](LostConnection e)
