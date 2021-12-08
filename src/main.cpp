@@ -27,7 +27,7 @@ string rand_flag()
 {
     int flagCut = numRand(0,2);
     int flagLength,partlength,flagCraPos;
-    string flagHead = "Flag{";
+    string flagHead = "flag{";
     string flag;
     string flagEnd = "}";
     switch (flagCut)
@@ -118,12 +118,6 @@ int main()
 			{
 				string plain = m.MessageChain.GetPlainText();
 
-                if (plain == "cat fllllllllag" && !groupBan)
-                {
-                    m.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
-                    return;
-                }
-
                 if (plain == "flag" && !groupBan)
                 {
                     string fakeflag = rand_flag();
@@ -164,11 +158,6 @@ int main()
             {
                 try {
                     string plain = fm.MessageChain.GetPlainText();
-                    if (plain == "cat fllllllllag")
-                    {
-                        fm.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
-                        return;
-                    }
 
                     if (plain == "flag")
                     {
@@ -202,11 +191,6 @@ int main()
             {
                 try {
                     string plain = tm.MessageChain.GetPlainText();
-                    if (plain == "cat fllllllllag")
-                    {
-                        tm.Reply(MessageChain().Plain("7coin{欢迎来拿flag}"));
-                        return;
-                    }
 
                     if (plain == "flag")
                     {

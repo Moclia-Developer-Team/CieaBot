@@ -13,7 +13,6 @@ namespace ciea
     {
         db = nullptr;
         db = make_unique<SQLite::Database>("CustomCommand.db",SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-        //SQLite::Database db("CustomCommand.db",SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
         cout << "打开数据库：" << db->getFilename().c_str() << " 成功。" << endl;
         if (!db->tableExists("CustomCommand"))
         {
@@ -27,12 +26,6 @@ namespace ciea
 
     string addCommand(string commandName, MessageChain commandResult)
     {
-        /*json commandJson = commandResult.ToJson();
-        fullCommand[commandName].push_back(commandJson);
-        ofstream save("./CustomCommand.json");
-        save << std::setw(4) << fullCommand << endl;
-        save.close();*/
-
         string commandJsonStr, commandReturnStr;
         commandJsonStr = commandResult.ToString();
         commandReturnStr = commandJsonStr.substr(0,strlen("[{\"text\":\"")) + commandJsonStr.substr(commandJsonStr.find(commandName + " ") +
@@ -51,10 +44,6 @@ namespace ciea
 
     string deleteCommand(string commandName)
     {
-        /*fullCommand.at(commandName).clear();
-        ofstream save("./CustomCommand.json");
-        save << std::setw(4) << fullCommand << endl;
-        save.close();*/
         db = nullptr;
         db = std::make_unique<SQLite::Database>("./CustomCommand.db", SQLite::OPEN_READWRITE);
         SQLite::Transaction tran(*db);
