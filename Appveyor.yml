@@ -1,0 +1,27 @@
+version: 1.0.{build}
+skip_non_tags: true
+image:
+  - Ubuntu2004
+configuration: Release
+platform:
+  - x64
+
+for:
+  # ubuntu
+  -
+    matrix:
+      only:
+        - image: Ubuntu2004
+          platform: x64
+
+    install:
+      - sh: sudo chmod 777 ./scripts/prepare-x64-linux.sh
+      - sh: ./scripts/prepare-x64-linux.sh
+
+    build_script:
+      - sh: sudo chmod 777 ./scripts/build-x64-linux.sh
+      - sh: ./scripts/build-x64-linux.sh
+
+    artifacts:
+      - path: ./build/x64-linux/CieaBot
+        name: CieaBot-Linux-X64
