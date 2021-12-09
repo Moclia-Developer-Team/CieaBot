@@ -24,4 +24,6 @@
 #include <iomanip>
 #include <memory>
 
+#include <stdio.h>
+
 #include <mirai.h> // mirai相关
